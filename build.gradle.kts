@@ -1,21 +1,14 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktor)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 group = "dev.carlosivis.workoutsmartbackend"
 version = "0.0.1"
 
 application {
-    mainClass.set("dev.carlosivis.workoutsmartbackend.ApplicationKt")
-
-    val isDevelopment: Boolean = project.ext.has("development")
-    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
-}
-
-repositories {
-    mavenCentral()
-    google()
+    mainClass = "io.ktor.server.netty.EngineMain"
 }
 
 dependencies {
@@ -33,7 +26,7 @@ dependencies {
     implementation(libs.exposed.jdbc)
     implementation(libs.h2.database)
     implementation(libs.postgresql.driver)
-    implementation(libs.firebase.admin)
+    implementation(libs.firebase.auth.provider)
 
     implementation(libs.logback.classic)
 
