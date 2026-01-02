@@ -1,0 +1,55 @@
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+# 1. Arquivos de Configuração Sensíveis
+.env
+local.properties
+secrets.properties
+
+# 2. Logs do Servidor
+*.log
+logs/
+
+# 3. Dados Locais (Docker/Banco de Dados)
+postgres-data/
+pgdata/
+.docker/
+
+# 4. Arquivos de Sistema Operacional (Lixo)
+.DS_Store
+Thumbs.db
+Desktop.ini
