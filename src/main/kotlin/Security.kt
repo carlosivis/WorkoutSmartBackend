@@ -2,6 +2,8 @@ package dev.carlosivis
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -16,23 +18,24 @@ import java.sql.DriverManager
 import org.jetbrains.exposed.sql.*
 
 fun Application.configureSecurity() {
-    // Please read the jwt property from the config file if you are using EngineMain
-    val jwtAudience = "jwt-audience"
-    val jwtDomain = "https://jwt-provider-domain/"
     val jwtRealm = "ktor sample app"
-    val jwtSecret = "secret"
+
+    // Inicializar Firebase (certifique-se de ter serviceAccountKey.json no classpath)
+    if (FirebaseApp.getApps().isEmpty()) {
+        FirebaseApp.initializeApp()
+    }
+    val firebaseAuth = FirebaseAuth.getInstance()
+
     authentication {
-        jwt {
+        bearer("firebase") {
             realm = jwtRealm
-            verifier(
-                JWT
-                    .require(Algorithm.HMAC256(jwtSecret))
-                    .withAudience(jwtAudience)
-                    .withIssuer(jwtDomain)
-                    .build()
-            )
-            validate { credential ->
-                if (credential.payload.audience.contains(jwtAudience)) JWTPrincipal(credential.payload) else null
+            authenticate { tokenCredential ->
+                try {
+                    val decodedToken = firebaseAuth.verifyIdToken(tokenCredential.token)
+                    UserIdPrincipal(decodedToken.uid)
+                } catch (e: Exception) {
+                    null
+                }
             }
         }
     }
