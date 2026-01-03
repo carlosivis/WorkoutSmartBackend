@@ -1,7 +1,7 @@
 [versions]
 kotlin = "2.2.21"
 ktor = "3.0.1"
-logback = "1.4.14"
+logback = "1.5.13"
 exposed = "0.61.0"
 postgresql = "42.7.8"
 h2 = "2.3.232"
