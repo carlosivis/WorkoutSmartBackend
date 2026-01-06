@@ -1,9 +1,11 @@
 package dev.carlosivis.plugins
 
+import dev.carlosivis.features.auth.Users
 import io.ktor.server.application.*
 import java.sql.Connection
 import java.sql.DriverManager
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Application.configureDatabases() {
     Database.connect(
@@ -14,6 +16,10 @@ fun Application.configureDatabases() {
     )
     connectToPostgres(embedded = true)
 
+    transaction {
+        addLogger(StdOutSqlLogger)
+        SchemaUtils.create(Users)
+    }
 
 }
 
