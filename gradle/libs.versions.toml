@@ -24,6 +24,7 @@ logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "lo
 firebase-auth-provider = { module = "com.kborowy:firebase-auth-provider", version = "1.6.0" }
 exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
 exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+exposed-java-time = { module = "org.jetbrains.exposed:exposed-java-time", version.ref = "exposed" }
 h2-database = { module = "com.h2database:h2", version.ref = "h2" }
 postgresql-driver = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
 

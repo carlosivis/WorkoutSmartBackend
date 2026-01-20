@@ -24,6 +24,7 @@ dependencies {
 
     implementation(libs.exposed.core)
     implementation(libs.exposed.jdbc)
+    implementation(libs.exposed.java.time)
     implementation(libs.h2.database)
     implementation(libs.postgresql.driver)
     implementation(libs.firebase.auth.provider)
