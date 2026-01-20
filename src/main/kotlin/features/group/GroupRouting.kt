@@ -12,7 +12,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Route.groupRoutes() {
     route(Routes.Groups.BASE) {
-        authenticate {
+        authenticate("auth-firebase") {
 
             post {
                 val firebaseUid = call.principal<UserIdPrincipal>()?.name ?: return@post call.respond(HttpStatusCode.Unauthorized)
