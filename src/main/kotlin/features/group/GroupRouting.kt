@@ -1,6 +1,7 @@
 package dev.carlosivis.features.group
 
 
+import dev.carlosivis.core.Routes
 import dev.carlosivis.features.auth.Users
 import io.ktor.http.*
 import io.ktor.server.auth.*
@@ -10,7 +11,7 @@ import io.ktor.server.routing.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Route.groupRoutes() {
-    route("/groups") {
+    route(Routes.Groups.BASE) {
         authenticate {
 
             post {
@@ -31,7 +32,7 @@ fun Route.groupRoutes() {
                 call.respond(groups)
             }
 
-            post("/join") {
+            post(Routes.Groups.JOIN) {
                 val firebaseUid = call.principal<UserIdPrincipal>()?.name ?: return@post call.respond(HttpStatusCode.Unauthorized)
                 val userId = getUserIdFromFirebaseUid(firebaseUid)
 

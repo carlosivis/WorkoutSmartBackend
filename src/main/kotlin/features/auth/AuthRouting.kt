@@ -1,5 +1,7 @@
 package dev.carlosivis.features.auth
 
+import dev.carlosivis.core.Routes
+import dev.carlosivis.core.Strings
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -9,21 +11,21 @@ import io.ktor.server.routing.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Route.authRoutes() {
-    route("/auth") {
+    route(Routes.Auth.BASE) {
         authenticate("auth-firebase") {
 
-            post("/login") {
+            post(Routes.Auth.LOGIN) {
                 val firebaseUid = call.principal<UserIdPrincipal>()?.name
 
                 if (firebaseUid == null) {
-                    call.respond(HttpStatusCode.Unauthorized, "Token inválido ou usuário não identificado")
+                    call.respond(HttpStatusCode.Unauthorized, Strings.Security.UNAUTHORIZED)
                     return@post
                 }
 
                 val loginRequest = try {
                     call.receive<LoginRequest>()
                 } catch (e: Exception) {
-                    call.respond(HttpStatusCode.BadRequest, "Corpo da requisição inválido: ${e.message}")
+                    call.respond(HttpStatusCode.BadRequest, Strings.Error.badRequest(e.message))
                     return@post
                 }
 
@@ -32,7 +34,7 @@ fun Route.authRoutes() {
                     call.respond(HttpStatusCode.OK, userResponse)
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    call.respond(HttpStatusCode.InternalServerError, "Erro ao processar login")
+                    call.respond(HttpStatusCode.InternalServerError, Strings.Error.UNEXPECTED_ERROR)
                 }
             }
         }

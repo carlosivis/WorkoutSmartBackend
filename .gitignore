@@ -39,6 +39,7 @@ out/
 .env
 local.properties
 secrets.properties
+firebase-admin.json
 
 # 2. Logs do Servidor
 *.log

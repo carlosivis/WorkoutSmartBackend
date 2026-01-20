@@ -1,38 +1,23 @@
 package dev.carlosivis.plugins
 
-
-import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
 import com.kborowy.authprovider.firebase.firebase
+import dev.carlosivis.core.Strings
 import io.ktor.server.application.*
 import io.ktor.server.auth.UserIdPrincipal
 import io.ktor.server.auth.authentication
-import io.ktor.server.auth.jwt.JWTPrincipal
-import io.ktor.server.auth.jwt.jwt
 
 fun Application.configureSecurity() {
-    val jwtAudience = "jwt-audience"
-    val jwtDomain = "https://jwt-provider-domain/"
-    val jwtRealm = "ktor sample app"
-    val jwtSecret = "secret"
+
     authentication {
-        jwt {
-            realm = jwtRealm
-            verifier(
-                JWT
-                    .require(Algorithm.HMAC256(jwtSecret))
-                    .withAudience(jwtAudience)
-                    .withIssuer(jwtDomain)
-                    .build()
-            )
-            validate { credential ->
-                if (credential.payload.audience.contains(jwtAudience)) JWTPrincipal(credential.payload) else null
-            }
-        }
         firebase("auth-firebase") {
             setup {
-               // add setup to link firebase
+                val serviceAccountStream = this::class.java.classLoader
+                    .getResourceAsStream("firebase-admin.json")
+                    ?: throw IllegalStateException(Strings.Security.FIREBASE_CONFIG_MISSING)
+
+                adminFileStream = serviceAccountStream
             }
+
             validate { token ->
                 UserIdPrincipal(token.uid)
             }
