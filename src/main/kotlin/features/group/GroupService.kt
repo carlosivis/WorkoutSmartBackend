@@ -1,5 +1,6 @@
 package dev.carlosivis.features.group
 
+import dev.carlosivis.core.Strings
 import dev.carlosivis.features.auth.Users
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -28,7 +29,7 @@ object GroupService {
 
     fun join(userId: Int, code: String): Boolean = transaction {
         val group = Groups.selectAll().where { Groups.inviteCode eq code }.singleOrNull()
-            ?: throw IllegalArgumentException("Grupo não encontrado")
+            ?: throw IllegalArgumentException(Strings.Groups.NOT_FOUND)
 
         val groupIdFound = group[Groups.id]
 
@@ -37,7 +38,7 @@ object GroupService {
         }.count() > 0
 
         if (isMember) {
-            throw IllegalStateException("Usuário já está no grupo")
+            throw IllegalStateException(Strings.Groups.ALREADY_MEMBER)
         }
 
         GroupMembers.insert {

@@ -2,6 +2,7 @@ package dev.carlosivis.features.group
 
 
 import dev.carlosivis.core.Routes
+import dev.carlosivis.core.Strings
 import dev.carlosivis.features.auth.Users
 import io.ktor.http.*
 import io.ktor.server.auth.*
@@ -12,38 +13,38 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Route.groupRoutes() {
     route(Routes.Groups.BASE) {
-        authenticate("auth-firebase") {
+        post(Routes.Groups.CREATE) {
+            val firebaseUid =
+                call.principal<UserIdPrincipal>()?.name ?: return@post call.respond(HttpStatusCode.Unauthorized)
+            val userId = getUserIdFromFirebaseUid(firebaseUid)
 
-            post {
-                val firebaseUid = call.principal<UserIdPrincipal>()?.name ?: return@post call.respond(HttpStatusCode.Unauthorized)
-                val userId = getUserIdFromFirebaseUid(firebaseUid)
+            val request = call.receive<CreateGroupRequest>()
+            val groupId = GroupService.create(userId, request)
 
-                val request = call.receive<CreateGroupRequest>()
-                val groupId = GroupService.create(userId, request)
+            call.respond(HttpStatusCode.Created, mapOf("groupId" to groupId))
+        }
 
-                call.respond(HttpStatusCode.Created, mapOf("groupId" to groupId))
-            }
+        get {
+            val firebaseUid =
+                call.principal<UserIdPrincipal>()?.name ?: return@get call.respond(HttpStatusCode.Unauthorized)
+            val userId = getUserIdFromFirebaseUid(firebaseUid)
 
-            get {
-                val firebaseUid = call.principal<UserIdPrincipal>()?.name ?: return@get call.respond(HttpStatusCode.Unauthorized)
-                val userId = getUserIdFromFirebaseUid(firebaseUid)
+            val groups = GroupService.listUserGroups(userId)
+            call.respond(groups)
+        }
 
-                val groups = GroupService.listUserGroups(userId)
-                call.respond(groups)
-            }
+        post(Routes.Groups.JOIN) {
+            val firebaseUid =
+                call.principal<UserIdPrincipal>()?.name ?: return@post call.respond(HttpStatusCode.Unauthorized)
+            val userId = getUserIdFromFirebaseUid(firebaseUid)
 
-            post(Routes.Groups.JOIN) {
-                val firebaseUid = call.principal<UserIdPrincipal>()?.name ?: return@post call.respond(HttpStatusCode.Unauthorized)
-                val userId = getUserIdFromFirebaseUid(firebaseUid)
+            val request = call.receive<JoinGroupRequest>()
 
-                val request = call.receive<JoinGroupRequest>()
-
-                try {
-                    GroupService.join(userId, request.inviteCode)
-                    call.respond(HttpStatusCode.OK, mapOf("message" to "Entrou com sucesso!"))
-                } catch (e: Exception) {
-                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to e.message))
-                }
+            try {
+                GroupService.join(userId, request.inviteCode)
+                call.respond(HttpStatusCode.OK, mapOf("message" to Strings.Groups.JOIN_SUCCESS))
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.BadRequest, mapOf("error" to e.message))
             }
         }
     }

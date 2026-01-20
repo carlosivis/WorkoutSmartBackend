@@ -12,8 +12,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Route.authRoutes() {
     route(Routes.Auth.BASE) {
-        authenticate("auth-firebase") {
-
             post(Routes.Auth.LOGIN) {
                 val firebaseUid = call.principal<UserIdPrincipal>()?.name
 
@@ -38,7 +36,6 @@ fun Route.authRoutes() {
                 }
             }
         }
-    }
 }
 private fun getUserIdFromFirebaseUid(uid: String): Int = transaction {
     Users.select(Users.id).where { Users.firebaseUid eq uid }.single()[Users.id]
