@@ -2,41 +2,40 @@ package dev.carlosivis.features.auth
 
 import dev.carlosivis.core.Routes
 import dev.carlosivis.core.Strings
+import dev.carlosivis.core.onFailure
+import dev.carlosivis.core.onSuccess
 import io.ktor.http.*
-import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Route.authRoutes() {
     route(Routes.Auth.BASE) {
-            post(Routes.Auth.LOGIN) {
-                val firebaseUid = call.principal<UserIdPrincipal>()?.name
+        post(Routes.Auth.LOGIN) {
+            val firebaseUid = call.principal<UserIdPrincipal>()?.name
 
-                if (firebaseUid == null) {
-                    call.respond(HttpStatusCode.Unauthorized, Strings.Security.UNAUTHORIZED)
-                    return@post
-                }
-
-                val loginRequest = try {
-                    call.receive<LoginRequest>()
-                } catch (e: Exception) {
-                    call.respond(HttpStatusCode.BadRequest, Strings.Error.badRequest(e.message))
-                    return@post
-                }
-
-                try {
-                    val userResponse = AuthService.registerOrLogin(firebaseUid, loginRequest)
-                    call.respond(HttpStatusCode.OK, userResponse)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    call.respond(HttpStatusCode.InternalServerError, Strings.Error.UNEXPECTED_ERROR)
-                }
+            if (firebaseUid == null) {
+                call.respond(HttpStatusCode.Unauthorized, Strings.Security.UNAUTHORIZED)
+                return@post
             }
+
+            val loginRequest = try {
+                call.receive<LoginRequest>()
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.BadRequest, Strings.Error.badRequest(e.message))
+                return@post
+            }
+
+            AuthService.registerOrLogin(firebaseUid, loginRequest)
+                .onSuccess { userResponse ->
+                    call.respond(HttpStatusCode.OK, userResponse)
+                }
+                .onFailure { e ->
+                    e.printStackTrace()
+                    call.respond(HttpStatusCode.InternalServerError,
+                        mapOf("error" to Strings.Error.UNEXPECTED_ERROR))
+                }
         }
-}
-private fun getUserIdFromFirebaseUid(uid: String): Int = transaction {
-    Users.select(Users.id).where { Users.firebaseUid eq uid }.single()[Users.id]
+    }
 }
