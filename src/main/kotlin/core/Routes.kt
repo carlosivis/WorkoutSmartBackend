@@ -12,5 +12,10 @@ object Routes {
         const val BASE = "/groups"
         const val CREATE = "/"
         const val JOIN = "/join"
+        const val RANKING = "/ranking"
+    }
+
+    object Activities {
+        const val BASE = "/activities"
     }
 }

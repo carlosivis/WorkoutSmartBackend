@@ -21,8 +21,13 @@ object Strings {
         const val CREATE_SUCCESS = "Grupo criado com sucesso."
     }
 
+    object Activity {
+        const val REGISTRY_SUCCESS = "Registro de atividade realizado com sucesso!"
+    }
+
     object Error {
         const val UNEXPECTED_ERROR = "Ocorreu um erro inesperado."
+        const val NOT_PERMISSION = "Você não tem permissão para visualizar este ranking."
         fun badRequest(message: String?) = "Requisição inválido: $message"
     }
 

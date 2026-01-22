@@ -23,5 +23,5 @@ object GroupMembers : Table("group_members") {
     val score = long("score").default(0)
     val joinedAt = datetime("joined_at").default(LocalDateTime.now())
 
-    override val primaryKey = PrimaryKey(userId, groupId) // Chave composta para evitar duplicação
+    override val primaryKey = PrimaryKey(userId, groupId)
 }

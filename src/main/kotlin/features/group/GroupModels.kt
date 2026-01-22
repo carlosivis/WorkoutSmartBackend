@@ -20,3 +20,10 @@ data class GroupResponse(
     val inviteCode: String,
     val memberCount: Long
 )
+
+@Serializable
+data class RankingMember(
+    val position: Int,
+    val displayName: String,
+    val score: Long
+)

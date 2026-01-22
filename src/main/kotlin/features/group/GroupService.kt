@@ -4,9 +4,12 @@ import dev.carlosivis.core.Either
 import dev.carlosivis.core.Strings
 import dev.carlosivis.core.runCatchingEither
 import dev.carlosivis.features.auth.Users
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.util.UUID
+import java.util.*
 
 object GroupService {
 
@@ -64,6 +67,35 @@ object GroupService {
                         name = it[Groups.name],
                         inviteCode = it[Groups.inviteCode],
                         memberCount = 0 // TODO: Implement count real
+                    )
+                }
+        }
+    }
+
+    fun getGroupRanking(groupId: Int, requestingUserId: Int): Either<List<RankingMember>> = runCatchingEither {
+        transaction {
+            val groupExists = Groups.select(Groups.id).where { Groups.id eq groupId }.count() > 0
+            if (!groupExists) {
+                throw IllegalArgumentException(Strings.Groups.NOT_FOUND)
+            }
+
+            val isMember = GroupMembers.selectAll().where {
+                (GroupMembers.groupId eq groupId) and (GroupMembers.userId eq requestingUserId)
+            }.count() > 0
+
+            if (!isMember) {
+                throw IllegalAccessException(Strings.Error.NOT_PERMISSION)
+            }
+
+            (Users innerJoin GroupMembers)
+                .select(Users.displayName, GroupMembers.score)
+                .where { GroupMembers.groupId eq groupId }
+                .orderBy(GroupMembers.score, SortOrder.DESC)
+                .mapIndexed { index, row ->
+                    RankingMember(
+                        position = index + 1,
+                        displayName = row[Users.displayName] ?: "John Doe",
+                        score = row[GroupMembers.score]
                     )
                 }
         }

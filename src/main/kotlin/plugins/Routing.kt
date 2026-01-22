@@ -1,5 +1,6 @@
 package dev.carlosivis.plugins
 
+import dev.carlosivis.features.activity.activityRoutes
 import dev.carlosivis.features.auth.authRoutes
 import dev.carlosivis.features.group.GroupService
 import dev.carlosivis.features.group.groupRoutes
@@ -17,6 +18,8 @@ fun Application.configureRouting() {
             authRoutes()
 
             groupRoutes()
+
+            activityRoutes()
         }
 
         get("/") {
