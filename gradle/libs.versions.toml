@@ -6,6 +6,7 @@ exposed = "0.61.0"
 postgresql = "42.7.8"
 h2 = "2.3.232"
 junit = "4.13.2"
+dotenv = "6.4.1"
 
 [libraries]
 ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor" }
@@ -23,6 +24,7 @@ exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "e
 exposed-java-time = { module = "org.jetbrains.exposed:exposed-java-time", version.ref = "exposed" }
 h2-database = { module = "com.h2database:h2", version.ref = "h2" }
 postgresql-driver = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
+dotenv-kotlin = { module = "io.github.cdimascio:dotenv-kotlin", version.ref = "dotenv" }
 
 # Testes
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }

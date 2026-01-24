@@ -1,6 +1,9 @@
 package dev.carlosivis.plugins
 
+import dev.carlosivis.features.activity.Activities
 import dev.carlosivis.features.auth.Users
+import dev.carlosivis.features.group.GroupMembers
+import dev.carlosivis.features.group.Groups
 import io.ktor.server.application.*
 import java.sql.Connection
 import java.sql.DriverManager
@@ -8,17 +11,26 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Application.configureDatabases() {
-    Database.connect(
-        url = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1",
-        user = "root",
-        driver = "org.h2.Driver",
-        password = "",
-    )
-    connectToPostgres(embedded = true)
+    val url = environment.config.propertyOrNull("postgres.url")?.getString()
 
-    transaction {
+    val database = if (!url.isNullOrBlank() && url.contains("postgresql")) {
+        val user = environment.config.property("postgres.user").getString()
+        val password = environment.config.property("postgres.password").getString()
+        log.info("Conectando ao Postgres em: $url")
+        Database.connect(url, driver = "org.postgresql.Driver", user = user, password = password)
+    } else {
+        log.info("Usando banco em memória H2")
+        Database.connect(
+            url = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1",
+            user = "root",
+            driver = "org.h2.Driver",
+            password = ""
+        )
+    }
+
+    transaction(database) {
         addLogger(StdOutSqlLogger)
-        SchemaUtils.create(Users)
+        SchemaUtils.create(Users, Groups, GroupMembers, Activities)
     }
 
 }

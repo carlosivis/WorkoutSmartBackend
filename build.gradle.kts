@@ -29,6 +29,8 @@ dependencies {
     implementation(libs.postgresql.driver)
     implementation(libs.firebase.auth.provider)
 
+    implementation(libs.dotenv.kotlin)
+
     implementation(libs.logback.classic)
 
     testImplementation(libs.ktor.server.test.host)
