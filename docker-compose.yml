@@ -1,0 +1,29 @@
+services:
+  postgres_db:
+    image: postgres:16-alpine
+    container_name: workout_postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-root}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-root}
+      POSTGRES_DB: workout_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  backend:
+    build: .
+    container_name: workout_backend
+    depends_on:
+      - postgres_db
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: ${PORT:-8080}
+      DB_URL: ${DB_URL:-jdbc:postgresql://workout_postgres:5432/workout_db}
+      DB_USER: ${DB_USER:-root}
+      DB_PASSWORD: ${DB_PASSWORD:-root}
+      RUNNING_IN_DOCKER: true
+
+volumes:
+  postgres-data:

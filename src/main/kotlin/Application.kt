@@ -9,19 +9,20 @@ import io.ktor.server.application.*
 
 fun main(args: Array<String>) {
 
-    val dotenv = dotenv {
-        ignoreIfMissing = true
-    }
+    if (System.getenv("RUNNING_IN_DOCKER") == null)
+        dotenv {
+            ignoreIfMissing = true
+        }.entries().forEach {
+            System.setProperty(it.key, it.value)
+        }
 
-    dotenv.entries().forEach {
-        System.setProperty(it.key, it.value)
-    }
+    println()
     io.ktor.server.netty.EngineMain.main(args)
 }
 
 fun Application.module() {
     configureSecurity()
     configureSerialization()
-    configureDatabases()
+    configureDatabases(false)
     configureRouting()
 }

@@ -8,13 +8,12 @@ group = "dev.carlosivis.workoutsmartbackend"
 version = "0.0.1"
 
 application {
-    mainClass = "io.ktor.server.netty.EngineMain"
+    mainClass = "dev.carlosivis.ApplicationKt"
 }
 
 dependencies {
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.netty)
-    implementation(libs.ktor.server.config.yaml)
 
     implementation(libs.ktor.server.auth)
     implementation(libs.ktor.server.auth.jwt)

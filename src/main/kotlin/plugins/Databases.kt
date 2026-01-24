@@ -10,16 +10,27 @@ import java.sql.DriverManager
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
-fun Application.configureDatabases() {
-    val url = environment.config.propertyOrNull("postgres.url")?.getString()
+fun Application.configureDatabases(embedded: Boolean) {
 
-    val database = if (!url.isNullOrBlank() && url.contains("postgresql")) {
-        val user = environment.config.property("postgres.user").getString()
-        val password = environment.config.property("postgres.password").getString()
-        log.info("Conectando ao Postgres em: $url")
-        Database.connect(url, driver = "org.postgresql.Driver", user = user, password = password)
-    } else {
+    if (!embedded){
+        val dbConfig = environment.config.config("database")
+
+        val url = dbConfig.property("url").getString()
+        val user = dbConfig.property("user").getString()
+        val password = dbConfig.property("password").getString()
+
+        log.info("Conectando ao Postgres")
+
+        Database.connect(
+            url = url,
+            user = user,
+            driver = "org.postgresql.Driver",
+            password = password
+        )
+    }
+     else {
         log.info("Usando banco em memória H2")
+
         Database.connect(
             url = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1",
             user = "root",
@@ -28,7 +39,7 @@ fun Application.configureDatabases() {
         )
     }
 
-    transaction(database) {
+    transaction {
         addLogger(StdOutSqlLogger)
         SchemaUtils.create(Users, Groups, GroupMembers, Activities)
     }
