@@ -20,7 +20,7 @@ services:
       - "8080:8080"
     environment:
       PORT: ${PORT:-8080}
-      DB_URL: ${DB_URL:-jdbc:postgresql://workout_postgres:5432/workout_db}
+      DB_URL: ${DB_URL:-jdbc:postgresql://localhost:5432/workout_db}
       DB_USER: ${DB_USER:-root}
       DB_PASSWORD: ${DB_PASSWORD:-root}
       RUNNING_IN_DOCKER: true

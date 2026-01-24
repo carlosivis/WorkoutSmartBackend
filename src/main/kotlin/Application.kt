@@ -12,11 +12,8 @@ fun main(args: Array<String>) {
     if (System.getenv("RUNNING_IN_DOCKER") == null)
         dotenv {
             ignoreIfMissing = true
-        }.entries().forEach {
-            System.setProperty(it.key, it.value)
         }
 
-    println()
     io.ktor.server.netty.EngineMain.main(args)
 }
 
