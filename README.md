@@ -1,46 +1,43 @@
-# WorkoutSmartBackend
+# WorkoutSmart Backend (MVP)
 
-This project was created using the [Ktor Project Generator](https://start.ktor.io).
+Backend desenvolvido em **Kotlin** com **Ktor**, servindo a API para a aplicação mobile **WorkoutSmart**. Este projeto encontra-se em fase de MVP (Minimum Viable Product), focado na gestão de grupos de treino, rankings e registo de atividades.
 
-Here are some useful links to get you started:
+O Frontend Mobile (Kotlin Multiplatform) pode ser encontrado aqui:
+> 🔗 **[Link para o Repositório do Frontend KMP]** *(https://github.com/carlosivis/KMP_WorkoutSmart.git)*
 
-- [Ktor Documentation](https://ktor.io/docs/home.html)
-- [Ktor GitHub page](https://github.com/ktorio/ktor)
-- The [Ktor Slack chat](https://app.slack.com/client/T09229ZC6/C0A974TJ9). You'll need
-  to [request an invite](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up) to join.
+## 🛠 Tech Stack
 
-## Features
+* **Linguagem:** Kotlin 2.2.21
+* **Framework Web:** Ktor 3.0.1 (Netty)
+* **Base de Dados:** PostgreSQL 16
+* **ORM:** Exposed
+* **Autenticação:** Firebase Admin SDK (Validação de Token)
+* **Infraestrutura:** Docker & Docker Compose
 
-Here's a list of features included in this project:
+## 🚀 Funcionalidades Atuais
 
-| Name                                                                   | Description                                                                        |
-|------------------------------------------------------------------------|------------------------------------------------------------------------------------|
-| [Routing](https://start.ktor.io/p/routing)                             | Provides a structured routing DSL                                                  |
-| [Authentication](https://start.ktor.io/p/auth)                         | Provides extension point for handling the Authorization header                     |
-| [Authentication JWT](https://start.ktor.io/p/auth-jwt)                 | Handles JSON Web Token (JWT) bearer authentication scheme                          |
-| [Content Negotiation](https://start.ktor.io/p/content-negotiation)     | Provides automatic content conversion according to Content-Type and Accept headers |
-| [kotlinx.serialization](https://start.ktor.io/p/kotlinx-serialization) | Handles JSON serialization using kotlinx.serialization library                     |
-| [Exposed](https://start.ktor.io/p/exposed)                             | Adds Exposed database to your application                                          |
-| [Postgres](https://start.ktor.io/p/postgres)                           | Adds Postgres database to your application                                         |
+* **Autenticação:** Sincronização de usuarios via Firebase Auth.
+* **Grupos:** Criação de grupos, sistema de convites (código único) e listagem.
+* **Ranking:** Visualização de classificações (Leaderboard) baseadas em pontuação dentro dos grupos.
+* **Atividades:** Registo de treinos (ex: Ginásio, Corrida) que atribuem pontos automáticos.
 
-## Building & Running
+## ⚙️ Como rodar o Projeto
 
-To build or run the project, use one of the following tasks:
+### Pré-requisitos
+* JDK 21+
+* Docker & Docker Compose
 
-| Task                                    | Description                                                          |
-|-----------------------------------------|----------------------------------------------------------------------|
-| `./gradlew test`                        | Run the tests                                                        |
-| `./gradlew build`                       | Build everything                                                     |
-| `./gradlew buildFatJar`                 | Build an executable JAR of the server with all dependencies included |
-| `./gradlew buildImage`                  | Build the docker image to use with the fat JAR                       |
-| `./gradlew publishImageToLocalRegistry` | Publish the docker image locally                                     |
-| `./gradlew run`                         | Run the server                                                       |
-| `./gradlew runDocker`                   | Run using the local docker image                                     |
+### Configuração
+1.  Renomeie o arquivo `.env.example` para `.env` na raiz do projeto e ajuste as variáveis se necessário:
+    ```properties
+    PORT=8080
+    DB_URL=jdbc:postgresql://localhost:5432/workout_db
+    DB_USER=seu_usuario
+    DB_PASSWORD=sua_senha
+    ```
+2.  Adicione o arquivo `firebase-admin.json` (Service Account Key) na pasta `src/main/resources/` para que a autenticação funcione.
 
-If the server starts successfully, you'll see the following output:
-
-```
-2024-12-04 14:32:45.584 [main] INFO  Application - Application started in 0.303 seconds.
-2024-12-04 14:32:45.682 [main] INFO  Application - Responding at http://0.0.0.0:8080
-```
-
+### Executar com Docker (Recomendado)
+Para subir a base de dados e a aplicação simultaneamente:
+```bash
+docker-compose up --build
