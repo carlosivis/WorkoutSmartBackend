@@ -8,6 +8,7 @@ object Users : Table("users") {
     val email = varchar("email", 100)
     val displayName = varchar("display_name", 100).nullable()
     val points = long("points").default(0)
+    val photoRrl = varchar("photo_url", 1024).nullable()
 
     override val primaryKey = PrimaryKey(id)
 }

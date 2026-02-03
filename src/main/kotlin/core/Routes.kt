@@ -4,7 +4,6 @@ object Routes {
 
     object Auth {
         const val BASE = "/auth"
-        const val REGISTER = "/register"
         const val LOGIN = "/login"
     }
 
