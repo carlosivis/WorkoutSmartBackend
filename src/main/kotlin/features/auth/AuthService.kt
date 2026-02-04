@@ -17,7 +17,7 @@ object AuthService {
                         Users.update({ Users.firebaseUid eq firebaseUid }) {
                             it[email] = request.email
                             it[displayName] = request.displayName
-                            it[photoRrl] = request.photoUrl
+                            it[photoUrl] = request.photoUrl
                         }
                     }
 
@@ -28,7 +28,7 @@ object AuthService {
                         it[this.email] = request.email
                         it[this.displayName] = request.displayName
                         it[this.points] = 0
-                        it[this.photoRrl] = request.photoUrl
+                        it[this.photoUrl] = request.photoUrl
                     } get Users.id
 
                     UserResponse(
@@ -49,6 +49,6 @@ object AuthService {
         email = this[Users.email],
         displayName = this[Users.displayName],
         points = this[Users.points],
-        photoUrl = this[Users.photoRrl]
+        photoUrl = this[Users.photoUrl]
     )
 }
