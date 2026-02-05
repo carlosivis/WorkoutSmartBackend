@@ -58,17 +58,31 @@ object GroupService {
 
     fun listUserGroups(userId: Int) = runCatchingEither {
         transaction {
-            (Groups innerJoin GroupMembers)
+            val userGroups = (Groups innerJoin GroupMembers)
                 .select(Groups.id, Groups.name, Groups.inviteCode)
                 .where { GroupMembers.userId eq userId }
                 .map {
+                    val groupId = it[Groups.id]
+
+                    val ranking = (Users innerJoin GroupMembers)
+                        .select(Users.id, GroupMembers.score)
+                        .where { GroupMembers.groupId eq groupId }
+                        .orderBy(GroupMembers.score, SortOrder.DESC)
+                        .mapIndexed { index, row ->
+                            Triple(row[Users.id], index + 1, row[GroupMembers.score])
+                        }
+
+                    val userStats = ranking.find { stats -> stats.first == userId }
+
                     GroupResponse(
-                        id = it[Groups.id],
+                        id = groupId,
                         name = it[Groups.name],
                         inviteCode = it[Groups.inviteCode],
-                        memberCount = 0 // TODO: Implement count real
+                        userScore = userStats?.third ?: 0L,
+                        userPosition = userStats?.second ?: 0
                     )
                 }
+            userGroups
         }
     }
 

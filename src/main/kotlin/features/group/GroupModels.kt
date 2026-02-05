@@ -18,7 +18,8 @@ data class GroupResponse(
     val id: Int,
     val name: String,
     val inviteCode: String,
-    val memberCount: Long
+    val userScore: Long,
+    val userPosition: Int
 )
 
 @Serializable
