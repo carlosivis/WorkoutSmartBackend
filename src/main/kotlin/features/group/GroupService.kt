@@ -109,7 +109,8 @@ object GroupService {
                     RankingMember(
                         position = index + 1,
                         displayName = row[Users.displayName] ?: "John Doe",
-                        score = row[GroupMembers.score]
+                        score = row[GroupMembers.score],
+                        photoUrl = row[Users.photoUrl] ?: ""
                     )
                 }
         }

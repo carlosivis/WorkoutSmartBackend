@@ -26,5 +26,6 @@ data class GroupResponse(
 data class RankingMember(
     val position: Int,
     val displayName: String,
+    val photoUrl: String,
     val score: Long
 )
