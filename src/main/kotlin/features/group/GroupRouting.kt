@@ -2,27 +2,24 @@ package dev.carlosivis.features.group
 
 
 import dev.carlosivis.core.*
-import dev.carlosivis.features.auth.Users
 import io.ktor.http.*
-import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Route.groupRoutes() {
     route(Routes.Groups.BASE) {
         post(Routes.Groups.CREATE) {
-           UserUtils.withUser(call) { userId ->
-               val request = call.receive<CreateGroupRequest>()
-               GroupService.create(userId, request)
-                   .onSuccess { groupId ->
-                       call.respond(HttpStatusCode.Created, mapOf("groupId" to groupId))
-                   }
-                   .onFailure {
-                       call.respond(HttpStatusCode.BadRequest, mapOf("error" to it.message))
-                   }
-           }
+            UserUtils.withUser(call) { userId ->
+                val request = call.receive<CreateGroupRequest>()
+                GroupService.create(userId, request)
+                    .onSuccess { group ->
+                        call.respond(HttpStatusCode.Created, group)
+                    }
+                    .onFailure {
+                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to it.message))
+                    }
+            }
         }
 
         get {
@@ -38,12 +35,12 @@ fun Route.groupRoutes() {
         }
 
         post(Routes.Groups.JOIN) {
-            UserUtils.withUser(call){ userId ->
+            UserUtils.withUser(call) { userId ->
                 val request = call.receive<JoinGroupRequest>()
 
                 GroupService.join(userId, request.inviteCode)
                     .onSuccess { group ->
-                        call.respond(HttpStatusCode.OK, mapOf("message" to Strings.Groups.JOIN_SUCCESS))
+                        call.respond(HttpStatusCode.OK, group)
                     }
                     .onFailure { error ->
                         val status = when (error) {

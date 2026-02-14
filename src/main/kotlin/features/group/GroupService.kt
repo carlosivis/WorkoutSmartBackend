@@ -13,7 +13,7 @@ import java.util.*
 
 object GroupService {
 
-    fun create(userId: Int, request: CreateGroupRequest): Either<Int> = runCatchingEither {
+    fun create(userId: Int, request: CreateGroupRequest): Either<GroupResponse> = runCatchingEither {
         transaction {
             // TODO: validate if not exist in prod
             val generatedCode = UUID.randomUUID().toString().substring(0, 6).uppercase()
@@ -30,7 +30,13 @@ object GroupService {
                 it[this.groupId] = newGroupId
             }
 
-            newGroupId
+            GroupResponse(
+                id = newGroupId,
+                name = request.name,
+                inviteCode = generatedCode,
+                userScore = 0L,
+                userPosition = 1
+            )
         }
     }
 
