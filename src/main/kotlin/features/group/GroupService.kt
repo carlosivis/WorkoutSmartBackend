@@ -108,7 +108,7 @@ object GroupService {
             }
 
             (Users innerJoin GroupMembers)
-                .select(Users.displayName, GroupMembers.score)
+                .select(Users.displayName, GroupMembers.score, Users.photoUrl)
                 .where { GroupMembers.groupId eq groupId }
                 .orderBy(GroupMembers.score, SortOrder.DESC)
                 .mapIndexed { index, row ->
