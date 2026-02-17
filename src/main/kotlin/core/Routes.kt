@@ -14,7 +14,7 @@ object Routes {
         const val RANKING = "/ranking"
     }
 
-    object Activities {
-        const val BASE = "/activities"
+    object WorkoutLogs {
+        const val BASE = "/workout/logs"
     }
 }

@@ -21,8 +21,8 @@ object Strings {
         const val CREATE_SUCCESS = "Grupo criado com sucesso."
     }
 
-    object Activity {
-        const val REGISTRY_SUCCESS = "Registro de atividade realizado com sucesso!"
+    object WorkoutLog {
+        const val REGISTRY_SUCCESS = "Registro de treino realizado com sucesso!"
     }
 
     object Error {

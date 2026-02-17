@@ -1,9 +1,9 @@
 package dev.carlosivis.plugins
 
-import dev.carlosivis.features.activity.Activities
 import dev.carlosivis.features.auth.Users
 import dev.carlosivis.features.group.GroupMembers
 import dev.carlosivis.features.group.Groups
+import dev.carlosivis.features.workoutlog.WorkoutLogs
 import io.ktor.server.application.*
 import java.sql.Connection
 import java.sql.DriverManager
@@ -41,7 +41,7 @@ fun Application.configureDatabases(embedded: Boolean) {
 
     transaction {
         addLogger(StdOutSqlLogger)
-        SchemaUtils.create(Users, Groups, GroupMembers, Activities)
+        SchemaUtils.create(Users, Groups, GroupMembers, WorkoutLogs)
     }
 
 }
