@@ -9,13 +9,17 @@ import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.koin.ktor.ext.inject
 
 fun Route.workoutLogRoutes() {
+
+    val service by inject<WorkoutLogService>()
+
     route(Routes.WorkoutLogs.BASE) {
         post {
             UserUtils.withUser(call) { userId ->
                 val request = call.receive<WorkoutLogRequest>()
-                WorkoutLogService.logWorkout(userId, request)
+                service.logWorkout(userId, request)
                     .onSuccess { call.respond(HttpStatusCode.Created,
                         mapOf("message" to Strings.WorkoutLog.REGISTRY_SUCCESS)) }
                     .onFailure { call.respond(HttpStatusCode.BadRequest,

@@ -9,8 +9,12 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.koin.ktor.ext.inject
 
 fun Route.authRoutes() {
+
+    val service by inject<AuthService>()
+
     route(Routes.Auth.BASE) {
         post(Routes.Auth.LOGIN) {
             val firebaseUid = call.principal<UserIdPrincipal>()?.name
@@ -27,7 +31,7 @@ fun Route.authRoutes() {
                 return@post
             }
 
-            AuthService.registerOrLogin(firebaseUid, loginRequest)
+            service.registerOrLogin(firebaseUid, loginRequest)
                 .onSuccess { userResponse ->
                     call.respond(HttpStatusCode.OK, userResponse)
                 }

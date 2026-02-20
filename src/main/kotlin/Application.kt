@@ -1,5 +1,6 @@
 package dev.carlosivis
 
+import dev.carlosivis.plugins.configureDI
 import dev.carlosivis.plugins.configureDatabases
 import dev.carlosivis.plugins.configureRouting
 import dev.carlosivis.plugins.configureSecurity
@@ -20,6 +21,7 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
+    configureDI()
     configureSecurity()
     configureSerialization()
     configureDatabases(false)

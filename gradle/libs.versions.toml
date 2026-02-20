@@ -7,6 +7,8 @@ postgresql = "42.7.8"
 h2 = "2.3.232"
 junit = "4.13.2"
 dotenv = "6.4.1"
+koin = "4.1.1"
+
 
 [libraries]
 ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor" }
@@ -25,6 +27,10 @@ exposed-java-time = { module = "org.jetbrains.exposed:exposed-java-time", versio
 h2-database = { module = "com.h2database:h2", version.ref = "h2" }
 postgresql-driver = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
 dotenv-kotlin = { module = "io.github.cdimascio:dotenv-kotlin", version.ref = "dotenv" }
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
+koin-core = { module = "io.insert-koin:koin-core" }
+koin-ktor = { module = "io.insert-koin:koin-ktor" }
+koin-logger = { module = "io.insert-koin:koin-logger-slf4j" }
 
 # Testes
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }

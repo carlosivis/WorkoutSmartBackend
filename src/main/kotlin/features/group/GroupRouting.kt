@@ -6,13 +6,17 @@ import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.koin.ktor.ext.inject
 
 fun Route.groupRoutes() {
+
+    val service by inject<GroupService>()
+
     route(Routes.Groups.BASE) {
         post(Routes.Groups.CREATE) {
             UserUtils.withUser(call) { userId ->
                 val request = call.receive<CreateGroupRequest>()
-                GroupService.create(userId, request)
+                service.create(userId, request)
                     .onSuccess { group ->
                         call.respond(HttpStatusCode.Created, group)
                     }
@@ -24,7 +28,7 @@ fun Route.groupRoutes() {
 
         get {
             UserUtils.withUser(call) { userId ->
-                GroupService.listUserGroups(userId)
+                service.listUserGroups(userId)
                     .onSuccess { groups ->
                         call.respond(groups)
                     }
@@ -38,7 +42,7 @@ fun Route.groupRoutes() {
             UserUtils.withUser(call) { userId ->
                 val request = call.receive<JoinGroupRequest>()
 
-                GroupService.join(userId, request.inviteCode)
+                service.join(userId, request.inviteCode)
                     .onSuccess { group ->
                         call.respond(HttpStatusCode.OK, group)
                     }
@@ -61,7 +65,7 @@ fun Route.groupRoutes() {
                     call.respond(HttpStatusCode.BadRequest, mapOf("error" to "ID do grupo inválido"))
                     return@withUser
                 }
-                GroupService.getGroupRanking(groupId, userId)
+                service.getGroupRanking(groupId, userId)
                     .onSuccess { ranking ->
                         call.respond(ranking)
                     }
