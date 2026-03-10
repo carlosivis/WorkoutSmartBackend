@@ -224,7 +224,7 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/activities",
+              "raw": "{{base_url}}/workout/logs",
               "host": [
                 "{{base_url}}"
               ],
