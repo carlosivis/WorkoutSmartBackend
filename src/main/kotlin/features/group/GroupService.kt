@@ -40,7 +40,7 @@ object GroupService {
         }
     }
 
-    fun join(userId: Int, code: String): Either<Unit> = runCatchingEither {
+    fun join(userId: Int, code: String): Either<GroupResponse> = runCatchingEither {
         transaction {
             val group = Groups.selectAll().where { Groups.inviteCode eq code }.singleOrNull()
                 ?: throw IllegalArgumentException(Strings.Groups.NOT_FOUND)
@@ -59,6 +59,14 @@ object GroupService {
                 it[this.userId] = userId
                 it[this.groupId] = groupIdFound
             }
+
+            GroupResponse(
+                id = groupIdFound,
+                name = group[Groups.name],
+                inviteCode = group[Groups.inviteCode],
+                userScore = 0L,
+                userPosition = 0
+            )
         }
     }
 

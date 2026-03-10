@@ -44,7 +44,7 @@ fun Route.groupRoutes() {
 
                 service.join(userId, request.inviteCode)
                     .onSuccess { group ->
-                        call.respond(HttpStatusCode.OK, group)
+                        call.respond(group)
                     }
                     .onFailure { error ->
                         val status = when (error) {
